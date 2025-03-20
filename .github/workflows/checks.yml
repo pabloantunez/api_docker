@@ -22,6 +22,8 @@ jobs: # Define un nuevo Job
           password: ${{ secrets.DOCKERHUB_TOKEN}}
       - name: Checkout
         uses: actions/checkout@v2 # Checkea el código subido. Es provista por GitHub Actions. 
+      - name: Start Docker containers
+        run: docker-compose up -d
       - name: Test # Corre los test
         run: docker-compose run --rm app sh -c "python manage.py test" # Comando para correr los test
       - name: Lint # Corre el lint
