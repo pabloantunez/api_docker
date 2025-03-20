@@ -1,0 +1,14 @@
+# Docker componse suele estar compuesto de uno o más servicios. 
+services:
+  app:
+    build:
+      context: . # Indica que se quiere hacer un build con el dockerfile del current directory
+      args:
+        - DEV=true # Dice que use el argumento llamado dev y setee la variable en true
+    ports:
+      - "8000:8000" # Matchea el puerto local con el de docker
+    volumes:
+      - ./app:/app # Mapea la app directory del proyecto con el docker. Sirve para reflejar los cambios que se realizan localmente en el contenedor que se encuentra corriendo en tiempo real. Al correr el comando de creación, si la carpeta ya está creada, lo crea internamente sincronizándolo. 
+    command: > 
+      sh -c "python manage.py runserver 0.0.0.0:8000" 
+    # Sobreescribe el comando con el que se corre el proyecto. 

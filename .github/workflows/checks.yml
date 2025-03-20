@@ -1,0 +1,24 @@
+# Archivo de configuración para Github Actions
+
+---
+name: Checks
+
+on: [push] # Este es el trigger, se indica que quieren que se corran los Github actions cuando se haga un push. 
+
+jobs: # Define un nuevo Job
+  test-lint:
+    name: Test and Lint # Este va a ser el nombre que se va a ver en la interfaz de Github
+    runs-on: ubuntu-20.04 # El runner que se va a ejecutar en el job. Es, basicamente, el sistema operativo que se va a correr para ejecutar el job.
+    # steps --> diferentes cosas que se van a ir corriendo en el job.
+    steps:
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1 # Permite utilizar una acción pre hecha provista or GitHub Actions repository (se pueden crear acciones o se pueden reutilizar otras). Esta acción es utilizada para realizar el login.
+        with: # Enumera las credenciales.
+          username: ${{ secrets.DOCKERHUB_USER}}
+          password: ${{ secrets.DOCKERHUB_TOKEN}}
+      - name: Checkout
+        uses: actions/checkout@v2 # Checkea el código subido. Es provista por GitHub Actions. 
+      - name: Test # Corre los test
+        run: docker-compose run --rm app sh -c "python manage.py test" # Comando para correr los test
+      - name: Lint # Corre el lint
+        run: docker-compose run --rm app sh -c "flake8"
